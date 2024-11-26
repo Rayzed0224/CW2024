@@ -1,5 +1,9 @@
 package com.example.demo;
 
+/**
+ * Base class for all projectiles.
+ */
+
 public abstract class Projectile extends ActiveActorDestructible {
 
 	public Projectile(String imageName, int imageHeight, double initialXPos, double initialYPos) {

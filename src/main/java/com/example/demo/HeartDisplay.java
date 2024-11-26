@@ -13,7 +13,11 @@ public class HeartDisplay {
 	private double containerXPosition;
 	private double containerYPosition;
 	private int numberOfHeartsToDisplay;
-	
+
+	/**
+	 * Manages and displays player health using heart icons.
+	 */
+
 	public HeartDisplay(double xPosition, double yPosition, int heartsToDisplay) {
 		this.containerXPosition = xPosition;
 		this.containerYPosition = yPosition;

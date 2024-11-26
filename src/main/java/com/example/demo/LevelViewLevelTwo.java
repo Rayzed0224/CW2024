@@ -2,6 +2,10 @@ package com.example.demo;
 
 import javafx.scene.Group;
 
+/**
+ * Extends LevelView to add boss-specific UI elements.
+ */
+
 public class LevelViewLevelTwo extends LevelView {
 
 	private static final int SHIELD_X_POSITION = 1150;

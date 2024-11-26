@@ -1,5 +1,9 @@
 package com.example.demo;
 
+/**
+ * Implements the second level's logic, including boss mechanics.
+ */
+
 public class LevelTwo extends LevelParent {
 
 	private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/background2.jpg";

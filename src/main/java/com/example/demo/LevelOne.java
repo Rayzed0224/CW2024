@@ -1,5 +1,9 @@
 package com.example.demo;
 
+/**
+ * Implements the first level's logic, including enemy spawning and kill count mechanics.
+ */
+
 public class LevelOne extends LevelParent {
 	
 	private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/background1.jpg";

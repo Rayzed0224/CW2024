@@ -1,5 +1,9 @@
 package com.example.demo;
 
+/**
+ * Represents projectiles fired by the player.
+ */
+
 public class UserProjectile extends Projectile {
 
 	private static final String IMAGE_NAME = "userfire.png";

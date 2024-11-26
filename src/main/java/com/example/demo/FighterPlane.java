@@ -1,5 +1,9 @@
 package com.example.demo;
 
+/**
+ * Abstract base class for all fighter planes (player and enemies).
+ */
+
 public abstract class FighterPlane extends ActiveActorDestructible {
 
 	private int health;

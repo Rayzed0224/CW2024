@@ -1,5 +1,9 @@
 package com.example.demo;
 
+/**
+ * Extends ActiveActor, adding destructible functionality for actors.
+ */
+
 public abstract class ActiveActorDestructible extends ActiveActor implements Destructible {
 
 	private boolean isDestroyed;

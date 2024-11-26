@@ -2,6 +2,10 @@ package com.example.demo;
 
 import javafx.scene.image.*;
 
+/**
+ * Base class for all active entities in the game, providing movement and image setup.
+ */
+
 public abstract class ActiveActor extends ImageView {
 	
 	private static final String IMAGE_LOCATION = "/com/example/demo/images/";

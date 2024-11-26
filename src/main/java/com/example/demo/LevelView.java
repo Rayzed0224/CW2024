@@ -2,6 +2,10 @@ package com.example.demo;
 
 import javafx.scene.Group;
 
+/**
+ * Manages the main level UI, such as health and win/loss screens.
+ */
+
 public class LevelView {
 	
 	private static final double HEART_DISPLAY_X_POSITION = 5;

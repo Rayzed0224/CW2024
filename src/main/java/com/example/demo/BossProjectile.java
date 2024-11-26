@@ -1,5 +1,9 @@
 package com.example.demo;
 
+/**
+ * Represents projectiles fired by the boss.
+ */
+
 public class BossProjectile extends Projectile {
 	
 	private static final String IMAGE_NAME = "fireball.png";

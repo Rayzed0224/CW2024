@@ -1,5 +1,9 @@
 package com.example.demo;
 
+/**
+ * The player-controlled fighter plane.
+ */
+
 public class UserPlane extends FighterPlane {
 
 	private static final String IMAGE_NAME = "userplane.png";

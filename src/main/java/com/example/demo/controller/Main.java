@@ -5,6 +5,11 @@ import java.lang.reflect.InvocationTargetException;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+/**
+ * Entry point for the game.
+ * Initializes the main game window and launches the first level.
+ */
+
 public class Main extends Application {
 
 	private static final int SCREEN_WIDTH = 1300;

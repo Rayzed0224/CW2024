@@ -2,6 +2,10 @@ package com.example.demo;
 
 import java.util.*;
 
+/**
+ * Implements the boss logic, including shields and movement patterns.
+ */
+
 public class Boss extends FighterPlane {
 
 	private static final String IMAGE_NAME = "bossplane.png";

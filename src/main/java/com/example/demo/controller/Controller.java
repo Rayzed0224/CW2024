@@ -11,6 +11,11 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import com.example.demo.LevelParent;
 
+/**
+ * Handles game state transitions between levels.
+ * Observes levels to detect completion or game-over events.
+ */
+
 public class Controller implements Observer {
 
 	private static final String LEVEL_ONE_CLASS_NAME = "com.example.demo.LevelOne";

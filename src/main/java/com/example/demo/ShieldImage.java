@@ -3,6 +3,10 @@ package com.example.demo;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+/**
+ * Displays the boss's shield status.
+ */
+
 public class ShieldImage extends ImageView {
 	
 	private static final String IMAGE_NAME = "/images/shield.png";
