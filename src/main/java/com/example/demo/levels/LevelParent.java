@@ -3,6 +3,9 @@ package com.example.demo.levels;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.example.demo.actors.Boss;
+import com.example.demo.ui.ShieldImage;
+import com.example.demo.utilities.GameConstants;
 import com.example.demo.actors.ActiveActorDestructible;
 import com.example.demo.actors.FighterPlane;
 import com.example.demo.actors.UserPlane;
@@ -27,6 +30,10 @@ public abstract class LevelParent extends Observable {
 	private final double screenWidth;
 	private final double enemyMaximumYPosition;
 
+	// Constants for original screen dimensions
+	public static final double ORIGINAL_SCREEN_WIDTH = 1350.0;
+	public static final double ORIGINAL_SCREEN_HEIGHT = 750.0;
+
 	private final Group root;
 	private final Timeline timeline;
 	private final UserPlane user;
@@ -37,7 +44,9 @@ public abstract class LevelParent extends Observable {
 	private final List<ActiveActorDestructible> enemyUnits;
 	private final List<ActiveActorDestructible> userProjectiles;
 	private final List<ActiveActorDestructible> enemyProjectiles;
-	
+
+	protected List<ShieldImage> shields = new ArrayList<>();
+
 	private int currentNumberOfEnemies;
 	private LevelView levelView;
 
@@ -73,7 +82,39 @@ public abstract class LevelParent extends Observable {
 		initializeBackground();
 		initializeFriendlyUnits();
 		levelView.showHeartDisplay();
+
+		// Add resize listener
+		scene.widthProperty().addListener((obs, oldWidth, newWidth) -> resizeElements(newWidth.doubleValue(), scene.getHeight()));
+		scene.heightProperty().addListener((obs, oldHeight, newHeight) -> resizeElements(scene.getWidth(), newHeight.doubleValue()));
+
 		return scene;
+	}
+
+
+	public void resizeElements(double newWidth, double newHeight) {
+		// Calculate the scaling ratio
+		double widthRatio = newWidth / ORIGINAL_SCREEN_WIDTH;
+		double heightRatio = newHeight / ORIGINAL_SCREEN_HEIGHT;
+
+		// Update the background size
+		background.setFitWidth(newWidth);
+		background.setFitHeight(newHeight);
+
+		// Adjust user plane position
+		user.adjustPositionForResize(newWidth, newHeight);
+
+		// Adjust enemy planes, projectiles, and other game elements
+		enemyUnits.forEach(enemy -> enemy.adjustPositionForResize(newWidth, newHeight));
+		userProjectiles.forEach(projectile -> projectile.adjustPositionForResize(newWidth, newHeight));
+		enemyProjectiles.forEach(projectile -> projectile.adjustPositionForResize(newWidth, newHeight));
+
+		// Adjust level view elements (like health bars or other UI)
+		if (levelView != null) {
+			levelView.adjustUIForResize(newWidth, newHeight);
+		}
+
+		// Explicitly request a layout update to ensure proper resizing
+		root.requestLayout();
 	}
 
 	public void startGame() {
@@ -179,16 +220,26 @@ public abstract class LevelParent extends Observable {
 		handleCollisions(enemyProjectiles, friendlyUnits);
 	}
 
-	private void handleCollisions(List<ActiveActorDestructible> actors1,
-			List<ActiveActorDestructible> actors2) {
+	private void handleCollisions(List<ActiveActorDestructible> actors1, List<ActiveActorDestructible> actors2) {
 		for (ActiveActorDestructible actor : actors2) {
 			for (ActiveActorDestructible otherActor : actors1) {
+
+				// Skip collision if either actor is in the shields list
+				if (isShield(actor) || isShield(otherActor)) {
+					continue;
+				}
+
+				// Perform the collision detection
 				if (actor.getBoundsInParent().intersects(otherActor.getBoundsInParent())) {
 					actor.takeDamage();
 					otherActor.takeDamage();
 				}
 			}
 		}
+	}
+
+	private boolean isShield(ActiveActorDestructible actor) {
+		return shields.contains(actor);
 	}
 
 	private void handleEnemyPenetration() {
@@ -228,7 +279,7 @@ public abstract class LevelParent extends Observable {
 		return user;
 	}
 
-	protected Group getRoot() {
+	public Group getRoot() {
 		return root;
 	}
 

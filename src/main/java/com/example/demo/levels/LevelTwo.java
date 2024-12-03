@@ -15,7 +15,7 @@ public class LevelTwo extends LevelParent {
 
 	public LevelTwo(double screenHeight, double screenWidth) {
 		super(BACKGROUND_IMAGE_NAME, screenHeight, screenWidth, PLAYER_INITIAL_HEALTH);
-		boss = new Boss();
+		boss = new Boss(getRoot(), shields);
 	}
 
 	@Override
@@ -46,4 +46,9 @@ public class LevelTwo extends LevelParent {
 		return levelView;
 	}
 
+	@Override
+	public void resizeElements(double newWidth, double newHeight) {
+		super.resizeElements(newWidth, newHeight);
+		// Additional resizing for specific LevelTwo elements if required
+	}
 }

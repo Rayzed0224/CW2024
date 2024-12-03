@@ -33,4 +33,9 @@ public class LevelViewLevelTwo extends LevelView {
 		shieldImage.hideShield();
 	}
 
+	@Override
+	public void adjustUIForResize(double newWidth, double newHeight) {
+		super.adjustUIForResize(newWidth, newHeight);
+		// Additional adjustments for LevelTwo specific UI elements if required
+	}
 }

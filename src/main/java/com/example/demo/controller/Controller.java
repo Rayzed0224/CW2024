@@ -23,6 +23,9 @@ public class Controller implements Observer {
 	private static final String LEVEL_TWO_CLASS_NAME = "com.example.demo.levels.LevelTwo";
 	private final Stage stage;
 
+	// Field to keep track of the current level
+	private LevelParent currentLevel;
+
 	public Controller(Stage stage) {
 		this.stage = stage;
 	}
@@ -43,6 +46,9 @@ public class Controller implements Observer {
 		LevelParent myLevel = (LevelParent) constructor.newInstance(stage.getHeight(), stage.getWidth());
 		myLevel.addObserver(this);
 
+		// Assign the created level to currentLevel
+		currentLevel = myLevel;
+
 		Scene scene = myLevel.initializeScene();
 		stage.setScene(scene);
 		myLevel.startGame(); // Assuming startGame() begins animations or game logic
@@ -58,5 +64,10 @@ public class Controller implements Observer {
 			alert.setContentText(e.getClass().toString());
 			alert.show();
 		}
+	}
+
+	// Getter for the current level
+	public LevelParent getCurrentLevel() {
+		return currentLevel;
 	}
 }

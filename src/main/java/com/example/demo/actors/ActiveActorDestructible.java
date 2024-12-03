@@ -1,5 +1,6 @@
 package com.example.demo.actors;
 
+import com.example.demo.levels.LevelParent;
 import com.example.demo.utilities.Destructible;
 
 /**
@@ -35,5 +36,10 @@ public abstract class ActiveActorDestructible extends ActiveActor implements Des
 	public boolean isDestroyed() {
 		return isDestroyed;
 	}
-	
+
+	@Override
+	public void adjustPositionForResize(double newWidth, double newHeight) {
+		// Call the superclass implementation to adjust position
+		super.adjustPositionForResize(newWidth, newHeight);
+	}
 }
