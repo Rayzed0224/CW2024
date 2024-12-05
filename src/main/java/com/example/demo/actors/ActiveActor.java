@@ -11,25 +11,14 @@ public abstract class ActiveActor extends ImageView {
 
 	protected static final String IMAGE_LOCATION = "/com/example/demo/images/";
 
-
 	public ActiveActor(String imageName, int imageHeight, double initialXPos, double initialYPos) {
-		String fullImagePath = IMAGE_LOCATION + imageName;
-
 		try {
-			// Use getResourceAsStream to load the image
-			if (getClass().getResource(fullImagePath) == null) {
-				throw new NullPointerException("Resource not found: " + fullImagePath);
-			}
-
-			Image image = new Image(getClass().getResource(fullImagePath).toExternalForm());
+			Image image = new Image(getClass().getResource(IMAGE_LOCATION + imageName).toExternalForm());
 			this.setImage(image);
 		} catch (NullPointerException e) {
-			System.err.println("Error: Image not found - " + fullImagePath);
-		} catch (IllegalArgumentException e) {
-			System.err.println("Error: Illegal argument for image loading - " + e.getMessage());
+			System.err.println("Error: Image not found - " + IMAGE_LOCATION + imageName);
 		}
 
-		// Initialize ImageView properties regardless of image loading success
 		this.setLayoutX(initialXPos);
 		this.setLayoutY(initialYPos);
 		this.setFitHeight(imageHeight);

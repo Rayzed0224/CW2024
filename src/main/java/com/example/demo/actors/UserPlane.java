@@ -33,18 +33,18 @@ public class UserPlane extends FighterPlane {
 	@Override
 	public void updatePosition() {
 		if (isMoving()) {
-			// Move the plane
-			double newY = getTranslateY() + VERTICAL_VELOCITY * velocityMultiplier;
+			double initialTranslateY = getTranslateY();
+			this.moveVertically(VERTICAL_VELOCITY * velocityMultiplier);
+
+			// Calculate the new position
+			double newPosition = getLayoutY() + getTranslateY();
 
 			// Keep the plane within bounds
-			if (newY < yUpperBound) {
-				newY = yUpperBound; // Reset to upper bound if exceeding
-			} else if (newY > yLowerBound) {
-				newY = yLowerBound; // Reset to lower bound if exceeding
+			if (newPosition < yUpperBound) {
+				this.setTranslateY(yUpperBound - getLayoutY()); // Reset to the upper bound
+			} else if (newPosition > yLowerBound) {
+				this.setTranslateY(yLowerBound - getLayoutY()); // Reset to the lower bound
 			}
-
-			// Update the Y position of the plane
-			setTranslateY(newY);
 		}
 	}
 
@@ -94,8 +94,8 @@ public class UserPlane extends FighterPlane {
 		setTranslateX(getTranslateX() * widthRatio);
 		setTranslateY(getTranslateY() * heightRatio);
 
-		// Adjust boundaries to match the new screen size
+		// Adjust boundaries to match the new screen size without compounding scaling
 		yUpperBound = ORIGINAL_Y_UPPER_BOUND * heightRatio;
-		yLowerBound = newHeight - this.getFitHeight();  // Ensure the lower bound is accurate after resizing
+		yLowerBound = newHeight - 100;  // Adjust lower bound dynamically based on the new screen height
 	}
 }
