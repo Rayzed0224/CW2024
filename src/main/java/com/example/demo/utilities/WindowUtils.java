@@ -6,8 +6,17 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+/**
+ * A utility class for managing window and display settings for the application.
+ */
 public class WindowUtils {
 
+    /**
+     * Applies fullscreen mode to the specified stage.
+     *
+     * @param stage      The stage to apply fullscreen mode to.
+     * @param fullscreen {@code true} to enable fullscreen mode; {@code false} to disable it.
+     */
     public static void applyFullscreen(Stage stage, boolean fullscreen) {
         if (stage == null) {
             System.err.println("Stage is null. Cannot apply fullscreen.");
@@ -25,6 +34,11 @@ public class WindowUtils {
         delay.play();
     }
 
+    /**
+     * Sets the stage to windowed mode with predefined dimensions.
+     *
+     * @param stage The stage to set to windowed mode.
+     */
     public static void setWindowed(Stage stage) {
         stage.setFullScreen(false);
         stage.setMaximized(false);
@@ -33,6 +47,11 @@ public class WindowUtils {
         stage.centerOnScreen();
     }
 
+    /**
+     * Sets the stage to windowed borderless mode, maximizing it to fit the screen bounds.
+     *
+     * @param stage The stage to set to windowed borderless mode.
+     */
     public static void setWindowedBorderless(Stage stage) {
         stage.setFullScreen(false);
         stage.setMaximized(true);
@@ -47,7 +66,12 @@ public class WindowUtils {
         stage.setFullScreenExitHint("");
     }
 
-    // Update WindowUtils.java
+    /**
+     * Sets the display mode of the stage based on the specified mode.
+     *
+     * @param stage The stage to set the display mode for.
+     * @param mode  The display mode to apply ("Fullscreen", "Windowed Borderless", or "Windowed").
+     */
     public static void setStageDisplayMode(Stage stage, String mode) {
         System.out.println("Applying display mode: " + mode);
 

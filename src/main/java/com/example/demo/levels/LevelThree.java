@@ -16,12 +16,34 @@ import java.util.List;
  */
 public class LevelThree extends LevelParentBase {
 
+	/**
+	 * The file path of the background image for the level.
+	 */
 	private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/background2.jpg";
+
+	/**
+	 * The initial health of the player.
+	 */
 	private static final int PLAYER_INITIAL_HEALTH = 5;
+
+	/**
+	 * The initial health of the boss.
+	 */
 	private static final int BOSS_INITIAL_HEALTH = 20;
 
+	/**
+	 * Displays the player's health using heart icons.
+	 */
 	private HeartDisplay heartDisplay;
+
+	/**
+	 * Manages the game-over UI elements.
+	 */
 	private GameOverUI gameOverUI;
+
+	/**
+	 * Represents the boss character in the level.
+	 */
 	private Boss boss;
 
 	/**
@@ -35,11 +57,13 @@ public class LevelThree extends LevelParentBase {
 		System.out.println("LevelThree initialized.");
 	}
 
+	/**
+	 * Initializes friendly units, including the player-controlled plane and associated UI elements.
+	 */
 	@Override
 	protected void initializeFriendlyUnits() {
 		System.out.println("Initializing Friendly Units...");
 
-		// Null check for Scene and Root
 		if (getScene() == null || getRoot() == null) {
 			System.err.println("Scene or Root is null. Cannot initialize friendly units.");
 			return;
@@ -71,6 +95,9 @@ public class LevelThree extends LevelParentBase {
 		spawnEnemyUnits();
 	}
 
+	/**
+	 * Spawns the boss character and its associated shields.
+	 */
 	@Override
 	protected void spawnEnemyUnits() {
 		System.out.println("Spawning boss...");
@@ -83,7 +110,7 @@ public class LevelThree extends LevelParentBase {
 			getActorManager().addEnemy(boss);
 
 			if (!getRoot().getChildren().contains(boss)) {
-				getRoot().getChildren().add(boss); // Add only if not already added
+				getRoot().getChildren().add(boss);
 				System.out.println("Boss added to root.");
 			}
 		} else {
@@ -91,23 +118,27 @@ public class LevelThree extends LevelParentBase {
 		}
 	}
 
+	/**
+	 * Creates the shield images for the boss.
+	 *
+	 * @param count The number of shields to create.
+	 * @return A list of ShieldImage objects.
+	 */
 	protected List<ShieldImage> createShieldImages(int count) {
 		List<ShieldImage> shields = new ArrayList<>();
 
-		// Avoid duplicate creation
 		if (getRoot() == null) {
 			System.err.println("Root is null. Cannot create shields.");
 			return shields;
 		}
 
 		for (int i = 0; i < count; i++) {
-			double xPosition = getRoot().getLayoutX() + i * 50; // Adjust position relative to boss
-			double yPosition = getRoot().getLayoutY() - 20;    // Slightly above the boss
+			double xPosition = getRoot().getLayoutX() + i * 50;
+			double yPosition = getRoot().getLayoutY() - 20;
 
 			ShieldImage shield = new ShieldImage(xPosition, yPosition);
 			shields.add(shield);
 
-			// Add to root only if not already added
 			if (!getRoot().getChildren().contains(shield)) {
 				getRoot().getChildren().add(shield);
 			}
@@ -115,6 +146,9 @@ public class LevelThree extends LevelParentBase {
 		return shields;
 	}
 
+	/**
+	 * Updates the game state, including actor actions, collisions, and game conditions.
+	 */
 	@Override
 	protected void update() {
 		try {
@@ -143,6 +177,9 @@ public class LevelThree extends LevelParentBase {
 		}
 	}
 
+	/**
+	 * Checks if the game is over due to player losing health or defeating the boss.
+	 */
 	@Override
 	protected void checkIfGameOver() {
 		if (getUserPlane().getHealth() <= 0) {
@@ -153,7 +190,6 @@ public class LevelThree extends LevelParentBase {
 			System.out.println("Boss defeated! Congratulations!");
 			stopGame();
 
-			// Ensure WinImage is added
 			WinImage winImage = new WinImage(getScene().getWidth() / 2 - 200, getScene().getHeight() / 2 - 100);
 			if (!getRoot().getChildren().contains(winImage)) {
 				getRoot().getChildren().add(winImage);
@@ -164,28 +200,30 @@ public class LevelThree extends LevelParentBase {
 		}
 	}
 
+	/**
+	 * Returns the player to the main menu.
+	 */
 	private void returnToMainMenu() {
 		System.out.println("Returning to Main Menu...");
-		stopGame(); // Stop the game timeline
-		notifyObservers("MainMenu"); // Notify observers to switch to the main menu
+		stopGame();
+		notifyObservers("MainMenu");
 	}
 
+	/**
+	 * Restarts the level by clearing the game state and reinitializing all elements.
+	 */
 	private void restartLevel() {
-		stopGame(); // Stop the game timeline
+		stopGame();
 
-		// Clear all actors and UI elements
 		getRoot().getChildren().clear();
 		getActorManager().clearAllActors();
 
-		// Reinitialize background and friendly units
 		initializeBackground(getScene().getWidth(), getScene().getHeight());
 		initializeFriendlyUnits();
 
-		// Reinitialize boss
 		boss = null;
 		spawnEnemyUnits();
 
-		// Hide Game Over UI and restart the game
 		if (gameOverUI != null) {
 			gameOverUI.hideGameOverUI();
 		}
@@ -194,19 +232,25 @@ public class LevelThree extends LevelParentBase {
 		System.out.println("LevelThree restarted!");
 	}
 
+
+	/**
+	 * Initializes the scene and sets up key event listeners.
+	 *
+	 * @return The initialized scene.
+	 */
 	@Override
 	public Scene initializeScene() {
 		super.initializeScene();
 		Scene scene = getScene();
 
-		// Handle resizing events
+		// Configure resizing behavior for the user plane
 		scene.heightProperty().addListener((obs, oldHeight, newHeight) -> {
 			if (getUserPlane() != null) {
 				getUserPlane().setBounds(0, newHeight.doubleValue() - getUserPlane().getFitHeight());
 			}
 		});
 
-		// Configure key press actions
+		// Configure key press actions for controlling the user plane
 		scene.setOnKeyPressed(event -> {
 			switch (event.getCode()) {
 				case W -> getUserPlane().moveUp();
@@ -217,7 +261,7 @@ public class LevelThree extends LevelParentBase {
 			}
 		});
 
-		// Configure key release actions
+		// Configure key release actions for stopping the user plane
 		scene.setOnKeyReleased(event -> {
 			switch (event.getCode()) {
 				case W, S -> getUserPlane().stopVertical();
@@ -228,6 +272,12 @@ public class LevelThree extends LevelParentBase {
 		return scene;
 	}
 
+	/**
+	 * Resizes all elements in the level to adapt to the new screen dimensions.
+	 *
+	 * @param newWidth  The new width of the screen.
+	 * @param newHeight The new height of the screen.
+	 */
 	@Override
 	public void resizeElements(double newWidth, double newHeight) {
 		super.resizeElements(newWidth, newHeight);

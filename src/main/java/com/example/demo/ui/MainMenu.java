@@ -20,24 +20,36 @@ import javafx.stage.Stage;
  */
 public class MainMenu extends Application {
 
+    /**
+     * Button to apply settings in the settings menu.
+     */
     Button applyButton = new Button("Apply Settings");
+
+    /**
+     * The main menu scene, saved for reuse when navigating back to the main menu.
+     */
     private Scene mainMenuScene;
 
+    /**
+     * Starts the application by creating and displaying the main menu.
+     *
+     * @param primaryStage The primary stage for this application.
+     */
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Main Menu");
 
+        // Load and configure the background image
         ImageView backgroundImage = new ImageView(new Image(getClass().getResource("/com/example/demo/images/menu_background.png").toExternalForm()));
+        backgroundImage.setPreserveRatio(false);
+        backgroundImage.setFitWidth(primaryStage.getWidth());
+        backgroundImage.setFitHeight(primaryStage.getHeight());
 
-        //Set properties for scaling
-        backgroundImage.setPreserveRatio(false); // Stretch without keeping the aspect ratio
-        backgroundImage.setFitWidth(primaryStage.getWidth()); // Match the stage's width
-        backgroundImage.setFitHeight(primaryStage.getHeight()); // Match the stage's height
-
-        // Add a listener to dynamically resize when the stage changes size
+        // Add listeners to dynamically resize the background image
         primaryStage.widthProperty().addListener((obs, oldWidth, newWidth) -> backgroundImage.setFitWidth(newWidth.doubleValue()));
         primaryStage.heightProperty().addListener((obs, oldHeight, newHeight) -> backgroundImage.setFitHeight(newHeight.doubleValue()));
 
+        // Create menu layout with buttons
         VBox menuLayout = new VBox(20);
         Button startButton = new Button("Start Game");
         Button creditsButton = new Button("Credits");
@@ -50,22 +62,28 @@ public class MainMenu extends Application {
         StackPane root = new StackPane();
         root.getChildren().addAll(backgroundImage, menuLayout);
 
-        // Save main menu scene
+        // Save the main menu scene
         mainMenuScene = new Scene(root, 1350, 750);
         primaryStage.setScene(mainMenuScene);
         primaryStage.show();
 
+        // Configure button actions
+
         // "Start Game" button action
         startButton.setOnAction(event -> Main.startGame(primaryStage));
 
-        // Settings button action
+        // "Settings" button action
         settingsButton.setOnAction(event -> showSettings(primaryStage));
 
-        // Exit button action
+        // "Exit" button action
         exitButton.setOnAction(event -> primaryStage.close());
     }
 
-
+    /**
+     * Displays the settings menu.
+     *
+     * @param primaryStage The primary stage for the application.
+     */
     private void showSettings(Stage primaryStage) {
         VBox settingsLayout = new VBox(20);
         settingsLayout.setAlignment(Pos.CENTER);
@@ -76,7 +94,7 @@ public class MainMenu extends Application {
         displayModeBox.getItems().addAll("Windowed", "Fullscreen", "Windowed Borderless");
         displayModeBox.setValue(UserSettings.getDisplayMode()); // Default to saved display mode
 
-        // Initialize apply button
+        // Configure apply button action
         applyButton.setOnAction(event -> {
             String selectedMode = displayModeBox.getValue();
             String currentMode = UserSettings.getDisplayMode();
@@ -90,7 +108,7 @@ public class MainMenu extends Application {
             }
         });
 
-        // Back button logic
+        // Configure back button action
         backButton.setOnAction(event -> {
             System.out.println("Returning to main menu, mode remains unchanged: " + UserSettings.getDisplayMode());
             primaryStage.setScene(mainMenuScene); // Reuse the stored main menu scene
@@ -110,6 +128,11 @@ public class MainMenu extends Application {
         WindowUtils.applyFullscreen(primaryStage, wasFullScreen);
     }
 
+    /**
+     * The main entry point for the application.
+     *
+     * @param args The command-line arguments.
+     */
     public static void main(String[] args) {
         launch(args);
     }

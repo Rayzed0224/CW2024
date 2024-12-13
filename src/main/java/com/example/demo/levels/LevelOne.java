@@ -14,15 +14,40 @@ import java.util.List;
  * and game-over mechanics. Uses `GameOverUI` for modular game-over UI management.
  */
 public class LevelOne extends LevelParentBase {
-	// Constants for level configuration
+
+	/**
+	 * The file path of the background image for the level.
+	 */
 	private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/background1.jpg";
+
+	/**
+	 * The total number of enemies allowed in the level at any time.
+	 */
 	private static final int TOTAL_ENEMIES = 3;
+
+	/**
+	 * The number of kills required to advance to the next level.
+	 */
 	private static final int KILLS_TO_ADVANCE = 5;
+
+	/**
+	 * The probability of spawning an enemy in each update cycle.
+	 */
 	private static final double ENEMY_SPAWN_PROBABILITY = 0.10;
+
+	/**
+	 * The initial health of the player.
+	 */
 	private static final int PLAYER_INITIAL_HEALTH = 5;
 
-	// UI and game state management
+	/**
+	 * Displays the player's health using heart icons.
+	 */
 	private HeartDisplay heartDisplay;
+
+	/**
+	 * Manages the game-over UI elements.
+	 */
 	private GameOverUI gameOverUI;
 
 	/**
@@ -120,6 +145,9 @@ public class LevelOne extends LevelParentBase {
 		checkLoseCondition();
 	}
 
+	/**
+	 * Spawns enemy units dynamically based on the level's configuration.
+	 */
 	@Override
 	protected void spawnEnemyUnits() {
 		System.out.println("Spawning enemy units...");
@@ -194,6 +222,11 @@ public class LevelOne extends LevelParentBase {
 		System.out.println("Level restarted!");
 	}
 
+	/**
+	 * Updates the heart display to reflect the player's current health.
+	 *
+	 * @param newHealth The new health value to display.
+	 */
 	public void updateHeartDisplay(int newHealth) {
 		System.out.println("Updating Heart Display. Current Health: " + newHealth);
 
@@ -262,6 +295,9 @@ public class LevelOne extends LevelParentBase {
 		}
 	}
 
+	/**
+	 * Checks if the game is over due to the player losing all health or meeting the win condition.
+	 */
 	@Override
 	protected void checkIfGameOver() {
 		if (getUserPlane().getHealth() <= 0) {

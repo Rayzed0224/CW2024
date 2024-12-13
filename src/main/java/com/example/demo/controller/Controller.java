@@ -16,22 +16,39 @@ import java.util.Observer;
  * Handles game state transitions between levels.
  * Observes levels to detect completion or game-over events.
  */
-
 public class Controller implements Observer {
 
-	// Updated with correct package for LevelOne
+	/**
+	 * The fully qualified class name of Level One.
+	 */
 	private static final String LEVEL_ONE_CLASS_NAME = "com.example.demo.levels.LevelOne";
+
+	/**
+	 * The primary stage for the game.
+	 */
 	private final Stage stage;
 
-	// Field to keep track of the current level
+	/**
+	 * The current level being played.
+	 */
 	private LevelParentBase currentLevel;
 
+	/**
+	 * Constructs the Controller with a reference to the main stage.
+	 *
+	 * @param stage the primary stage for the game
+	 */
 	public Controller(Stage stage) {
 		this.stage = stage;
 	}
 
+	/**
+	 * Launches the game by transitioning to the first level.
+	 *
+	 * @throws SecurityException if a security violation occurs
+	 * @throws IllegalArgumentException if an illegal argument is provided
+	 */
 	public void launchGame() throws SecurityException, IllegalArgumentException {
-
 		try {
 			stage.show();
 			goToLevel(LEVEL_ONE_CLASS_NAME);
@@ -40,6 +57,18 @@ public class Controller implements Observer {
 		}
 	}
 
+	/**
+	 * Transitions to the specified level.
+	 *
+	 * @param className the fully qualified class name of the level
+	 * @throws ClassNotFoundException if the level class is not found
+	 * @throws NoSuchMethodException if the constructor for the level class is not found
+	 * @throws SecurityException if a security violation occurs
+	 * @throws InstantiationException if the level class cannot be instantiated
+	 * @throws IllegalAccessException if the constructor is not accessible
+	 * @throws IllegalArgumentException if an illegal argument is provided
+	 * @throws InvocationTargetException if the constructor throws an exception
+	 */
 	private void goToLevel(String className) throws ClassNotFoundException, NoSuchMethodException, SecurityException,
 			InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		if ("GAME_COMPLETED".equals(className)) {
@@ -48,14 +77,12 @@ public class Controller implements Observer {
 			return;
 		}
 
-		// Corrected fully qualified class name
 		Class<?> levelClass = Class.forName(className);
 		LevelParentBase level = (LevelParentBase) levelClass
 				.getConstructor(double.class, double.class)
 				.newInstance(stage.getWidth(), stage.getHeight());
 		level.addObserver(this::handleLevelTransition);
 
-		// Assign the created level to currentLevel
 		currentLevel = level;
 
 		Scene scene = level.initializeScene();
@@ -63,6 +90,9 @@ public class Controller implements Observer {
 		level.startGame();
 	}
 
+	/**
+	 * Displays the win screen when the game is completed.
+	 */
 	private void displayWinScreen() {
 		System.out.println("Congratulations! You finished the game!");
 
@@ -80,6 +110,11 @@ public class Controller implements Observer {
 		stage.setScene(winScene);
 	}
 
+	/**
+	 * Handles transitions between levels by transitioning to the next level.
+	 *
+	 * @param nextLevel the fully qualified class name of the next level
+	 */
 	public void handleLevelTransition(String nextLevel) {
 		try {
 			System.out.println("Transitioning to: " + nextLevel);
@@ -91,6 +126,12 @@ public class Controller implements Observer {
 		}
 	}
 
+	/**
+	 * Updates the controller when a level notifies observers of a change.
+	 *
+	 * @param arg0 the observable object
+	 * @param arg1 the argument passed to the observers
+	 */
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		try {
@@ -103,13 +144,22 @@ public class Controller implements Observer {
 		}
 	}
 
+	/**
+	 * Displays an error alert with the exception message.
+	 *
+	 * @param e the exception to display
+	 */
 	private void showError(Exception e) {
 		Alert alert = new Alert(Alert.AlertType.ERROR);
 		alert.setContentText(e.getMessage());
 		alert.show();
 	}
 
-	// Getter for the current level
+	/**
+	 * Retrieves the current level being played.
+	 *
+	 * @return the current level
+	 */
 	public LevelParentBase getCurrentLevel() {
 		return currentLevel;
 	}

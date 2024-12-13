@@ -8,6 +8,9 @@ import javafx.scene.image.ImageView;
  */
 public class ShieldImage extends ImageView {
 
+	/**
+	 * The current health of the shield.
+	 */
 	private int health = 3; // Default shield health
 
 	/**
@@ -25,6 +28,11 @@ public class ShieldImage extends ImageView {
 		System.out.println("Shield created at X: " + xPosition + ", Y: " + yPosition);
 	}
 
+	/**
+	 * Loads the shield image.
+	 *
+	 * @return The loaded shield image.
+	 */
 	private static Image loadShieldImage() {
 		try {
 			return new Image(ShieldImage.class.getResource("/com/example/demo/images/shield.png").toExternalForm());
@@ -56,16 +64,28 @@ public class ShieldImage extends ImageView {
 		return health;
 	}
 
+	/**
+	 * Makes the shield visible.
+	 */
 	public void showShield() {
-		setVisible(true); // Make shield visible
+		setVisible(true);
 		System.out.println("Shield is now visible.");
 	}
 
+	/**
+	 * Makes the shield invisible.
+	 */
 	public void hideShield() {
-		setVisible(false); // Make shield invisible
+		setVisible(false);
 		System.out.println("Shield is now hidden.");
 	}
 
+	/**
+	 * Adjusts the position of the shield when the screen is resized.
+	 *
+	 * @param newWidth  The new width of the screen.
+	 * @param newHeight The new height of the screen.
+	 */
 	public void adjustPositionForResize(double newWidth, double newHeight) {
 		double xRatio = newWidth / 1920.0; // Assuming original width is 1920
 		double yRatio = newHeight / 1080.0; // Assuming original height is 1080
@@ -76,6 +96,12 @@ public class ShieldImage extends ImageView {
 		System.out.println("Shield resized to X: " + getLayoutX() + ", Y: " + getLayoutY());
 	}
 
+	/**
+	 * Adjusts the position of the shield by a specified offset.
+	 *
+	 * @param offsetX The offset to add to the current X position.
+	 * @param offsetY The offset to add to the current Y position.
+	 */
 	public void adjustPosition(double offsetX, double offsetY) {
 		setLayoutX(getLayoutX() + offsetX);
 		setLayoutY(getLayoutY() + offsetY);

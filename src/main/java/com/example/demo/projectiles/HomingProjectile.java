@@ -7,9 +7,26 @@ import javafx.scene.Group;
  * A homing projectile that tracks its target but includes deviation for dodgeability.
  */
 public class HomingProjectile extends Projectile {
-    private final ActiveActorDestructible target; // Target to track
-    private double deviationAngle; // Angle deviation to make the projectile less accurate
 
+    /**
+     * The target actor that the projectile is tracking.
+     */
+    private final ActiveActorDestructible target;
+
+    /**
+     * The angle deviation to make the projectile less accurate.
+     */
+    private double deviationAngle;
+
+    /**
+     * Constructs a HomingProjectile with the specified initial position, target, and image.
+     *
+     * @param x         The initial X position of the projectile.
+     * @param y         The initial Y position of the projectile.
+     * @param root      The root group to add the projectile to.
+     * @param target    The target actor for the projectile to track.
+     * @param imageName The image file name for the projectile.
+     */
     public HomingProjectile(double x, double y, Group root, ActiveActorDestructible target, String imageName) {
         super(imageName.replace("/com/example/demo/images/", ""), 20, x, y); // Remove base path if necessary
         this.target = target;
@@ -31,6 +48,9 @@ public class HomingProjectile extends Projectile {
                 ", Width: " + getFitWidth() + ", Height: " + getFitHeight());
     }
 
+    /**
+     * Updates the position of the projectile by tracking its target and applying deviation.
+     */
     @Override
     public void updatePosition() {
         if (target != null && !target.isDestroyed()) {
@@ -58,16 +78,27 @@ public class HomingProjectile extends Projectile {
         setLayoutX(Math.max(0, getLayoutX())); // Prevent moving off-screen
     }
 
+    /**
+     * Updates the state of the projectile, including its position.
+     */
     @Override
     public void updateActor() {
         updatePosition();
     }
 
+    /**
+     * Destroys the projectile when it takes damage.
+     */
     @Override
     public void takeDamage() {
         destroy(); // Destroy projectile on damage
     }
 
+    /**
+     * Checks whether the projectile is destroyed.
+     *
+     * @return {@code true} if the projectile is destroyed; {@code false} otherwise.
+     */
     @Override
     public boolean isDestroyed() {
         return super.isDestroyed(); // Use inherited destruction logic
