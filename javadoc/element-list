@@ -1,0 +1,7 @@
+module:com.example.demo
+com.example.demo.actors
+com.example.demo.controller
+com.example.demo.levels
+com.example.demo.projectiles
+com.example.demo.ui
+com.example.demo.utilities
