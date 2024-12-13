@@ -46,6 +46,27 @@ public class HeartDisplay {
 		}
 	}
 
+	public void updateHealth(int currentHealth) {
+		int displayedHearts = container.getChildren().size();
+
+		if (currentHealth < displayedHearts) {
+			// Remove excess hearts
+			int heartsToRemove = displayedHearts - currentHealth;
+			for (int i = 0; i < heartsToRemove; i++) {
+				removeHeart();
+			}
+		} else if (currentHealth > displayedHearts) {
+			// Add missing hearts
+			int heartsToAdd = currentHealth - displayedHearts;
+			for (int i = 0; i < heartsToAdd; i++) {
+				ImageView heart = new ImageView(new Image(getClass().getResource(HEART_IMAGE_NAME).toExternalForm()));
+				heart.setFitHeight(HEART_HEIGHT);
+				heart.setPreserveRatio(true);
+				container.getChildren().add(heart);
+			}
+		}
+	}
+
 	/**
 	 * Removes one heart from the display.
 	 */

@@ -1,80 +1,161 @@
 package com.example.demo.actors;
 
-import com.example.demo.projectiles.UserProjectile;
+import com.example.demo.levels.ActorManager;
+import com.example.demo.levels.LevelOne;
 import com.example.demo.levels.LevelParent;
+import com.example.demo.projectiles.UserProjectile;
+import com.example.demo.levels.LevelParentBase;
+import javafx.application.Platform;
+import javafx.scene.Group;
 
 /**
  * The player-controlled fighter plane.
  */
 public class UserPlane extends FighterPlane {
 
-	private static final String IMAGE_NAME = "userplane.png"; // Corrected path for resource
-	private static final double ORIGINAL_Y_UPPER_BOUND = -40;  // Original bound value for scaling calculations
-	private static final double ORIGINAL_Y_LOWER_BOUND = LevelParent.ORIGINAL_SCREEN_HEIGHT - 100;  // Original lower bound value
-	private static final double INITIAL_X_POSITION = 5.0;
-	private static final double INITIAL_Y_POSITION = 300.0;
+	private static final String IMAGE_NAME = "userplane.png";
 	private static final int IMAGE_HEIGHT = 20;
 	private static final int VERTICAL_VELOCITY = 8;
-	private static final double PROJECTILE_X_POSITION_OFFSET = 110.0;
-	private static final double PROJECTILE_Y_POSITION_OFFSET = 20.0;
+	private static final int HORIZONTAL_VELOCITY = 8;
+	private final double PROJECTILE_X_POSITION_OFFSET = getFitWidth() / 2.0; // Center horizontally
+	private final double PROJECTILE_Y_POSITION_OFFSET = getLayoutY() + 20 - getFitHeight() / 2.0; // Spawn above the plane
 
-	private int velocityMultiplier; // Multiplies by 1 (move down), -1 (move up), or 0 (stop)
+	private final ActorManager actorManager; // Reference to ActorManager
+	private final Group root;
+	private final LevelParentBase level;
+
+	// Movement multipliers
+	private int verticalVelocityMultiplier = 0; // Up (-1), Down (+1), Stop (0)
+	private int horizontalVelocityMultiplier = 0; // Left (-1), Right (+1), Stop (0)
+
 	private int numberOfKills;
-	private double yUpperBound; // Dynamically calculated based on screen size
-	private double yLowerBound; // Dynamically calculated based on screen size
+	private double yUpperBound;
+	private double yLowerBound;
+	private double xLeftBound;
+	private double xRightBound;
 
-	public UserPlane(int initialHealth) {
-		super(IMAGE_NAME, IMAGE_HEIGHT, INITIAL_X_POSITION, INITIAL_Y_POSITION, initialHealth);
-		velocityMultiplier = 0;
-		yUpperBound = ORIGINAL_Y_UPPER_BOUND;
-		yLowerBound = ORIGINAL_Y_LOWER_BOUND;
+	public double getYUpperBound() {
+		return yUpperBound;
+	}
+
+	public double getYLowerBound() {
+		return yLowerBound;
+	}
+
+	public UserPlane(double initialXPos, double initialYPos, Group root , ActorManager actorManager, int initialHealth, LevelParentBase level) {
+		super(IMAGE_NAME, IMAGE_HEIGHT, initialXPos, initialYPos, initialHealth);
+		this.root = root;
+		this.actorManager = actorManager;
+		this.level = level; // Use the generalized LevelParentBase type
+
+		if (actorManager == null) {
+			throw new IllegalArgumentException("ActorManager cannot be null");
+		}
+
+		System.out.println("UserPlane initialized with: ");
+		System.out.println("Initial X: " + initialXPos);
+		System.out.println("Initial Y: " + initialYPos);
+		System.out.println("ActorManager: " + actorManager);
+		System.out.println("Initial Health: " + initialHealth);
+
+		if (level == null) {
+			throw new IllegalArgumentException("Level cannot be null");
+		}
+
+		// Initialize movement bounds
+		this.yUpperBound = 0;
+		this.yLowerBound = root.getScene().getHeight() - getFitHeight();
+
+		System.out.println("Bounds Set: Upper = " + yUpperBound + ", Lower = " + yLowerBound);
+
+		this.verticalVelocityMultiplier = 0;
+		this.horizontalVelocityMultiplier = 0;
+	}
+
+	public void setBounds(double yUpperBound, double yLowerBound) {
+		this.yUpperBound = yUpperBound;
+		this.yLowerBound = yLowerBound;
+		System.out.println("Bounds updated: yUpper=" + yUpperBound + ", yLower=" + yLowerBound);
+	}
+
+	public void updateBounds(double sceneWidth, double sceneHeight) {
+		yUpperBound = 0; // Top of the screen
+		yLowerBound = sceneHeight - getFitHeight(); // Bottom of the screen
+		xLeftBound = 0; // Leftmost edge
+		xRightBound = sceneWidth - getFitWidth(); // Rightmost edge
+
+		System.out.println("Updated Bounds: ");
+		System.out.println("yUpperBound: " + yUpperBound);
+		System.out.println("yLowerBound: " + yLowerBound);
+		System.out.println("xLeftBound: " + xLeftBound);
+		System.out.println("xRightBound: " + xRightBound);
 	}
 
 	@Override
 	public void updatePosition() {
-		if (isMoving()) {
-			double initialTranslateY = getTranslateY();
-			this.moveVertically(VERTICAL_VELOCITY * velocityMultiplier);
+		super.updatePosition();
+		System.out.println("UserPlane: Y=" + getLayoutY());
+		double newY = getLayoutY() + verticalVelocityMultiplier * VERTICAL_VELOCITY;
+		double newX = getLayoutX() + horizontalVelocityMultiplier * HORIZONTAL_VELOCITY;
 
-			// Calculate the new position
-			double newPosition = getLayoutY() + getTranslateY();
+		// Clamp Y position within bounds
+		newY = Math.min(Math.max(newY, yUpperBound), yLowerBound);
 
-			// Keep the plane within bounds
-			if (newPosition < yUpperBound) {
-				this.setTranslateY(yUpperBound - getLayoutY()); // Reset to the upper bound
-			} else if (newPosition > yLowerBound) {
-				this.setTranslateY(yLowerBound - getLayoutY()); // Reset to the lower bound
-			}
-		}
+		// Clamp X position within bounds
+		newX = Math.min(Math.max(newX, xLeftBound), xRightBound);
+
+		// Set the updated position
+		setLayoutY(newY);
+		setLayoutX(newX);
+
+		System.out.println("Updated Plane Position: (" + newX + ", " + newY + ")");
 	}
 
 	@Override
 	public void updateActor() {
-		updatePosition(); // Update position based on user input
+		updatePosition();
 	}
 
 	@Override
-	public ActiveActorDestructible fireProjectile() {
-		// Calculate projectile starting position based on plane's current position
-		double projectileXPosition = getProjectileXPosition(PROJECTILE_X_POSITION_OFFSET);
-		double projectileYPosition = getProjectileYPosition(PROJECTILE_Y_POSITION_OFFSET);
-		return new UserProjectile(projectileXPosition, projectileYPosition);
+	public UserProjectile fireProjectile() {
+		// Use the inherited methods to calculate accurate spawn positions
+		double projectileXPosition = getProjectileXPosition(getFitWidth() / 2.0); // Center horizontally
+		double projectileYPosition = getProjectileYPosition(-getFitHeight() / 2.0); // Spawn slightly above the plane
+
+		// Use root to add projectile to the scene
+		UserProjectile projectile = new UserProjectile(projectileXPosition, projectileYPosition, root);
+
+		// Add the projectile to the ActorManager
+		actorManager.addUserProjectile(projectile);
+
+		System.out.println("Firing projectile from X: " + projectileXPosition + ", Y: " + projectileYPosition);
+
+		return projectile;
 	}
 
-	private boolean isMoving() {
-		return velocityMultiplier != 0;
-	}
 
 	public void moveUp() {
-		velocityMultiplier = -1;
+		verticalVelocityMultiplier = -1;
 	}
 
 	public void moveDown() {
-		velocityMultiplier = 1;
+		verticalVelocityMultiplier = 1;
 	}
 
-	public void stop() {
-		velocityMultiplier = 0;
+	public void stopVertical() {
+		verticalVelocityMultiplier = 0;
+	}
+
+	public void moveLeft() {
+		horizontalVelocityMultiplier = -1;
+	}
+
+	public void moveRight() {
+		horizontalVelocityMultiplier = 1;
+	}
+
+	public void stopHorizontal() {
+		horizontalVelocityMultiplier = 0;
 	}
 
 	public int getNumberOfKills() {
@@ -85,17 +166,31 @@ public class UserPlane extends FighterPlane {
 		numberOfKills++;
 	}
 
+	public LevelParentBase getLevel() {
+		return level;
+	}
+
+	@Override
+	public void takeDamage() {
+		super.takeDamage(); // Reduce health
+
+		// Update heart display for all levels
+		if (level instanceof LevelParentBase) {
+			LevelParentBase parentLevel = (LevelParentBase) level;
+			Platform.runLater(() -> parentLevel.updateHeartDisplay(getHealth()));
+		}
+	}
+
 	@Override
 	public void adjustPositionForResize(double newWidth, double newHeight) {
-		double widthRatio = newWidth / LevelParent.ORIGINAL_SCREEN_WIDTH;
-		double heightRatio = newHeight / LevelParent.ORIGINAL_SCREEN_HEIGHT;
+		// Update bounds based on new dimensions
+		updateBounds(newWidth, newHeight);
 
-		// Adjust translate values to new screen size
-		setTranslateX(getTranslateX() * widthRatio);
-		setTranslateY(getTranslateY() * heightRatio);
+		// Clamp current position within updated bounds
+		double newX = Math.min(Math.max(getLayoutX(), xLeftBound), xRightBound);
+		double newY = Math.min(Math.max(getLayoutY(), yUpperBound), yLowerBound);
 
-		// Adjust boundaries to match the new screen size without compounding scaling
-		yUpperBound = ORIGINAL_Y_UPPER_BOUND * heightRatio;
-		yLowerBound = newHeight - 100;  // Adjust lower bound dynamically based on the new screen height
+		setLayoutX(newX);
+		setLayoutY(newY);
 	}
 }

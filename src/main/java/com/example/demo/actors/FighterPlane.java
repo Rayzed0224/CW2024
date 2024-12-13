@@ -11,7 +11,7 @@ import javafx.scene.image.ImageView;
 public abstract class FighterPlane extends ActiveActorDestructible {
 
 	protected ImageView planeView;
-	private int health;
+	int health;
 
 	public FighterPlane(String imageName, int imageHeight, double initialXPos, double initialYPos, int health) {
 		super(imageName, imageHeight, initialXPos, initialYPos);

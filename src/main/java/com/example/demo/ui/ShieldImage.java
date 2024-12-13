@@ -1,57 +1,85 @@
 package com.example.demo.ui;
 
-import com.example.demo.levels.LevelParent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 /**
- * Displays the boss's shield status.
+ * Represents a shield image with health for the boss.
  */
 public class ShieldImage extends ImageView {
 
-	private static final String IMAGE_NAME = "/com/example/demo/images/shield.png";
-	private static final int SHIELD_SIZE = 200;
+	private int health = 3; // Default shield health
 
-	// Store original positions for proper resizing
-	private double originalXPosition;
-	private double originalYPosition;
-
+	/**
+	 * Constructs a ShieldImage with the specified position.
+	 *
+	 * @param xPosition The x-coordinate of the shield.
+	 * @param yPosition The y-coordinate of the shield.
+	 */
 	public ShieldImage(double xPosition, double yPosition) {
-		this.originalXPosition = xPosition;
-		this.originalYPosition = yPosition;
-
-		this.setLayoutX(xPosition);
-		this.setLayoutY(yPosition);
-		this.setImage(new Image(getClass().getResource(IMAGE_NAME).toExternalForm()));
-		this.setVisible(false);
-		this.setFitHeight(SHIELD_SIZE);
-		this.setFitWidth(SHIELD_SIZE);
+		super(loadShieldImage()); // Call the utility method
+		setFitWidth(50);  // Explicitly set the width
+		setFitHeight(50); // Explicitly set the height
+		setLayoutX(xPosition);
+		setLayoutY(yPosition);
+		System.out.println("Shield created at X: " + xPosition + ", Y: " + yPosition);
 	}
 
-	public void showShield() {
-		this.setVisible(true);
-	}
-
-	public void hideShield() {
-		this.setVisible(false);
+	private static Image loadShieldImage() {
+		try {
+			return new Image(ShieldImage.class.getResource("/com/example/demo/images/shield.png").toExternalForm());
+		} catch (NullPointerException e) {
+			System.err.println("Error: Shield image not found. Using placeholder.");
+			return new Image(ShieldImage.class.getResource("/com/example/demo/images/placeholder.png").toExternalForm());
+		}
 	}
 
 	/**
-	 * Adjusts the position and size of the shield image when resizing.
-	 * @param newWidth New width of the screen.
-	 * @param newHeight New height of the screen.
+	 * Reduces the shield's health by the specified damage amount.
+	 *
+	 * @param damage The amount of damage to inflict.
 	 */
-	public void adjustPositionForResize(double newWidth, double newHeight) {
-		double widthRatio = newWidth / LevelParent.ORIGINAL_SCREEN_WIDTH;
-		double heightRatio = newHeight / LevelParent.ORIGINAL_SCREEN_HEIGHT;
-
-		setTranslateX(getTranslateX() * widthRatio);
-		setTranslateY(getTranslateY() * heightRatio);
+	public void reduceHealth(int damage) {
+		health -= damage;
+		if (health < 0) {
+			health = 0;
+		}
+		System.out.println("Shield health reduced. Current health: " + health);
 	}
 
+	/**
+	 * Gets the current health of the shield.
+	 *
+	 * @return The shield's current health.
+	 */
+	public int getHealth() {
+		return health;
+	}
 
-	public void adjustPosition(double xPosition, double yPosition) {
-		setLayoutX(xPosition);
-		setLayoutY(yPosition);
+	public void showShield() {
+		setVisible(true); // Make shield visible
+		System.out.println("Shield is now visible.");
+	}
+
+	public void hideShield() {
+		setVisible(false); // Make shield invisible
+		System.out.println("Shield is now hidden.");
+	}
+
+	public void adjustPositionForResize(double newWidth, double newHeight) {
+		double xRatio = newWidth / 1920.0; // Assuming original width is 1920
+		double yRatio = newHeight / 1080.0; // Assuming original height is 1080
+
+		setLayoutX(getLayoutX() * xRatio);
+		setLayoutY(getLayoutY() * yRatio);
+
+		System.out.println("Shield resized to X: " + getLayoutX() + ", Y: " + getLayoutY());
+	}
+
+	public void adjustPosition(double offsetX, double offsetY) {
+		setLayoutX(getLayoutX() + offsetX);
+		setLayoutY(getLayoutY() + offsetY);
+
+		System.out.println("Shield position adjusted to X: " + getLayoutX() + ", Y: " + getLayoutY());
 	}
 }

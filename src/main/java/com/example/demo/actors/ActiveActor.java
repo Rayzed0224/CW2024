@@ -15,6 +15,7 @@ public abstract class ActiveActor extends ImageView {
 		try {
 			Image image = new Image(getClass().getResource(IMAGE_LOCATION + imageName).toExternalForm());
 			this.setImage(image);
+			System.out.println("Image loaded: " + IMAGE_LOCATION + imageName);
 		} catch (NullPointerException e) {
 			System.err.println("Error: Image not found - " + IMAGE_LOCATION + imageName);
 		}

@@ -1,11 +1,13 @@
 package com.example.demo.actors;
 
 import com.example.demo.levels.LevelParent;
-import com.example.demo.projectiles.BossProjectile;
+import com.example.demo.levels.ActorManager;
 import com.example.demo.ui.ShieldImage;
 import javafx.scene.Group;
 
 import java.util.*;
+
+import static javax.swing.SwingUtilities.getRoot;
 
 /**
  * Implements the boss logic, including shields and movement patterns.
@@ -27,24 +29,33 @@ public class Boss extends FighterPlane {
 	private static double Y_POSITION_UPPER_BOUND = -100.0;
 	private static double Y_POSITION_LOWER_BOUND = LevelParent.ORIGINAL_SCREEN_HEIGHT - 100.0;
 	private static final int MAX_FRAMES_WITH_SHIELD = 500;
+	private List<ShieldImage> shields = new ArrayList<>(); // List to store shields
 
 	private final List<Integer> movePattern;
 	private boolean isShielded;
 	private int consecutiveMovesInSameDirection;
 	private int indexOfCurrentMove;
 	private int framesWithShieldActivated;
+	private ActorManager actorManager;
+	private final UserPlane userPlane;
+	private final Group root; // Add a field for root
+	private int health;
 
 	private ShieldImage shieldImage;
 
-	public Boss(Group root, List<ShieldImage> shields) {
+	public Boss(Group root, List<ShieldImage> shields, ActorManager actorManager, UserPlane userPlane) {
 		super(IMAGE_NAME, IMAGE_HEIGHT, INITIAL_X_POSITION, INITIAL_Y_POSITION, HEALTH);
-		movePattern = new ArrayList<>();
+		this.root = root; // Initialize the root field
+		this.actorManager = actorManager; // Store ActorManager for projectile management
+		System.out.println("ActorManager initialized in Boss: " + this.actorManager);
+		this.userPlane = userPlane;
 		consecutiveMovesInSameDirection = 0;
 		indexOfCurrentMove = 0;
 		framesWithShieldActivated = 0;
 		isShielded = false;
 
-		//Initialize Movement Pattern
+		// Initialize movement pattern
+		movePattern = new ArrayList<>();
 		initializeMovePattern();
 
 		// Initialize and add shield to the root node
@@ -72,19 +83,49 @@ public class Boss extends FighterPlane {
 	public void updateActor() {
 		updatePosition();
 		updateShield();
+		fireProjectile();
 	}
 
 	@Override
 	public ActiveActorDestructible fireProjectile() {
-		// Fires a projectile with a given probability
-		return bossFiresInCurrentFrame() ? new BossProjectile(getProjectileYPosition(PROJECTILE_Y_POSITION_OFFSET)) : null;
+		System.out.println("Boss attempting to fire projectile...");
+		if (Math.random() < BOSS_FIRE_RATE) { // Adjust fire rate as needed
+			actorManager.createEnemyProjectile(
+					this.getLayoutX(),
+					this.getLayoutY() + this.getFitHeight() / 2, // Adjust position for Boss
+					userPlane,
+					"/com/example/demo/images/fireball.png"
+			);
+			System.out.println("Boss fired projectile.");
+		} else {
+			System.out.println("Boss chose not to fire this time.");
+		}
+		return null;
 	}
 
 	@Override
 	public void takeDamage() {
-		if (!isShielded) {
+		if (!shields.isEmpty()) {
+			ShieldImage shield = shields.get(0); // Get the first active shield
+			System.out.println("Shield is absorbing damage...");
+			shield.reduceHealth(1); // Reduce shield health by 1 (or more depending on damage)
+
+			if (shield.getHealth() <= 0) {
+				shields.remove(shield); // Remove the shield
+				root.getChildren().remove(shield); // Remove from game scene
+				System.out.println("Shield destroyed!");
+			} else {
+				System.out.println("Shield health remaining: " + shield.getHealth());
+			}
+		} else {
+			// No shields remaining, boss takes damage
 			super.takeDamage();
+			System.out.println("Boss took damage!");
 		}
+	}
+
+	public int getHealth() {
+		return this.health;
 	}
 
 	private void initializeMovePattern() {

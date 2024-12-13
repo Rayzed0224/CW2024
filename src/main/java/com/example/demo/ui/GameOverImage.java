@@ -19,6 +19,12 @@ public class GameOverImage extends ImageView {
 	public GameOverImage(double xPosition, double yPosition) {
 		// Load and set the game-over image
 		setImage(new Image(getClass().getResource(IMAGE_NAME).toExternalForm()));
+
+		// Scale the image
+		setFitWidth(400);  // Set the desired width
+		setPreserveRatio(true);  // Maintain aspect ratio
+
+		// Set position
 		setLayoutX(xPosition);
 		setLayoutY(yPosition);
 

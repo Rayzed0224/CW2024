@@ -1,7 +1,10 @@
 package com.example.demo.actors;
 
-import com.example.demo.levels.LevelParent;
+import com.example.demo.levels.ActorManager;
+import com.example.demo.levels.LevelParentBase;
 import com.example.demo.projectiles.EnemyProjectile;
+import com.example.demo.projectiles.HomingProjectile;
+import com.example.demo.projectiles.Projectile;
 
 /**
  * Represents enemy fighter planes.
@@ -11,60 +14,62 @@ public class EnemyPlane extends FighterPlane {
 
 	private static final String IMAGE_NAME = "enemyplane.png";  // Correct path for resource
 	private static final int IMAGE_HEIGHT = 150;
-	private static final int INITIAL_HEALTH = 1;
 	private static final double PROJECTILE_X_POSITION_OFFSET = -100.0;
 	private static final double PROJECTILE_Y_POSITION_OFFSET = 50.0;
 	private static final double FIRE_RATE = 0.01;  // Probability of firing in each update
 
-	public EnemyPlane(double initialXPos, double initialYPos) {
-		super(IMAGE_NAME, IMAGE_HEIGHT, initialXPos, initialYPos, INITIAL_HEALTH);
+	private final ActorManager actorManager;
+	private final UserPlane userPlane;
+
+	public EnemyPlane(double initialXPos, double initialYPos, ActorManager actorManager, UserPlane userPlane, int health) {
+		super(IMAGE_NAME, IMAGE_HEIGHT, initialXPos, initialYPos, health);
+		this.actorManager = actorManager; // Store ActorManager for projectile management
+		this.userPlane = userPlane;      // Initialize UserPlane reference
 	}
 
-	/**
-	 * Fires a projectile if the random condition is met.
-	 * Uses inherited methods to calculate projectile position.
-	 *
-	 * @return The newly fired projectile or null if no projectile is fired.
-	 */
-	@Override
-	public ActiveActorDestructible fireProjectile() {
-		if (Math.random() < FIRE_RATE) {
-			double projectileXPosition = getProjectileXPosition(PROJECTILE_X_POSITION_OFFSET);
-			double projectileYPosition = getProjectileYPosition(PROJECTILE_Y_POSITION_OFFSET);
-			return new EnemyProjectile(projectileXPosition, projectileYPosition);
-		}
-		return null;
+	public void setHealth(int health) {
+		this.health = health; // Update the health field
 	}
 
 	/**
 	 * Updates the position of the enemy plane by moving it horizontally.
 	 */
-	public void updatePosition() {
-		// Moves the plane horizontally (towards the left, as an example)
-		double currentX = getTranslateX();
-		setTranslateX(currentX - 6);  // Moves left by 6 units
-	}
-
 	@Override
 	public void updateActor() {
-		// Update the position of the plane
+		// Update position and fire projectiles
 		updatePosition();
-
-		// Fire a projectile if conditions are met
-		ActiveActorDestructible projectile = fireProjectile();
-		if (projectile != null) {
-			// Add the projectile to the game, assuming there's logic to handle this
-			// For example, you might add it to a list of active projectiles or to the game scene
-		}
+		fireProjectile();
 	}
 
 	@Override
 	public void adjustPositionForResize(double newWidth, double newHeight) {
-		double widthRatio = newWidth / LevelParent.ORIGINAL_SCREEN_WIDTH;
-		double heightRatio = newHeight / LevelParent.ORIGINAL_SCREEN_HEIGHT;
+		double widthRatio = newWidth / LevelParentBase.ORIGINAL_SCREEN_WIDTH;
+		double heightRatio = newHeight / LevelParentBase.ORIGINAL_SCREEN_HEIGHT;
 
-		// Adjust position directly using `this`
 		this.setTranslateX(this.getTranslateX() * widthRatio);
 		this.setTranslateY(this.getTranslateY() * heightRatio);
+	}
+
+	@Override
+	public ActiveActorDestructible fireProjectile() {
+		System.out.println("EnemyPlane attempting to fire projectile...");
+		if (Math.random() < FIRE_RATE) { // Ensure FIRE_RATE is high enough for testing
+			actorManager.createEnemyProjectile(
+					this.getLayoutX(),
+					this.getLayoutY(),
+					userPlane,
+					"enemyFire.png"
+			);
+			System.out.println("Projectile fired.");
+			return null; // Return the projectile if needed
+		}
+		return null;
+	}
+
+	@Override
+	public void updatePosition() {
+		// Moves the plane horizontally (towards the left)
+		double currentX = getTranslateX();
+		setTranslateX(currentX - 2); // Moves left by 2 units
 	}
 }
