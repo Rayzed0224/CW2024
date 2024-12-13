@@ -1,7 +1,8 @@
 package com.example.demo.actors;
 
 import com.example.demo.levels.LevelParent;
-import javafx.scene.image.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 /**
  * Base class for all active entities in the game, providing movement and image setup.

@@ -1,13 +1,13 @@
 package com.example.demo.actors;
 
-import com.example.demo.levels.LevelParent;
 import com.example.demo.levels.ActorManager;
+import com.example.demo.levels.LevelParent;
 import com.example.demo.ui.ShieldImage;
 import javafx.scene.Group;
 
-import java.util.*;
-
-import static javax.swing.SwingUtilities.getRoot;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Implements the boss logic, including shields and movement patterns.

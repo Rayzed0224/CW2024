@@ -1,10 +1,7 @@
 package com.example.demo.levels;
 
-import com.example.demo.actors.ActiveActorDestructible;
 import com.example.demo.actors.EnemyPlane;
 import com.example.demo.actors.UserPlane;
-import com.example.demo.projectiles.HomingProjectile;
-import com.example.demo.projectiles.Projectile;
 import com.example.demo.ui.GameOverUI;
 import com.example.demo.ui.HeartDisplay;
 import com.example.demo.ui.MainMenu;

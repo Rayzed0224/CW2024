@@ -1,16 +1,16 @@
 package com.example.demo.controller;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.Observable;
-import java.util.Observer;
-
+import com.example.demo.levels.LevelParentBase;
 import com.example.demo.ui.WinImage;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
-import com.example.demo.levels.LevelParentBase;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Handles game state transitions between levels.

@@ -1,10 +1,8 @@
 package com.example.demo.actors;
 
 import com.example.demo.levels.ActorManager;
-import com.example.demo.levels.LevelOne;
-import com.example.demo.levels.LevelParent;
-import com.example.demo.projectiles.UserProjectile;
 import com.example.demo.levels.LevelParentBase;
+import com.example.demo.projectiles.UserProjectile;
 import javafx.application.Platform;
 import javafx.scene.Group;
 

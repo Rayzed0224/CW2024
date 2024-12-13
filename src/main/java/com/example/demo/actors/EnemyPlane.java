@@ -2,9 +2,6 @@ package com.example.demo.actors;
 
 import com.example.demo.levels.ActorManager;
 import com.example.demo.levels.LevelParentBase;
-import com.example.demo.projectiles.EnemyProjectile;
-import com.example.demo.projectiles.HomingProjectile;
-import com.example.demo.projectiles.Projectile;
 
 /**
  * Represents enemy fighter planes.

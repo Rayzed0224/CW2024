@@ -4,6 +4,7 @@ import com.example.demo.controller.Main;
 import com.example.demo.utilities.UserSettings;
 import com.example.demo.utilities.WindowUtils;
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -12,9 +13,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.geometry.Pos;
-
-import static com.example.demo.controller.Main.myController;
 
 /**
  * Creates the main menu screen for the game.

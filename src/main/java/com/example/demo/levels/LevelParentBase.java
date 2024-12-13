@@ -1,18 +1,18 @@
 package com.example.demo.levels;
 
 import com.example.demo.actors.UserPlane;
-import com.example.demo.controller.Controller;
 import com.example.demo.ui.HeartDisplay;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
+import javafx.util.Duration;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.util.Duration;
 
 /**
  * Base class for shared level functionality.

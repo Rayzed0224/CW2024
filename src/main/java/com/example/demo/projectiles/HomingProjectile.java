@@ -3,8 +3,6 @@ package com.example.demo.projectiles;
 import com.example.demo.actors.ActiveActorDestructible;
 import javafx.scene.Group;
 
-import java.util.Random;
-
 /**
  * A homing projectile that tracks its target but includes deviation for dodgeability.
  */

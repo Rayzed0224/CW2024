@@ -2,7 +2,6 @@ package com.example.demo.projectiles;
 
 import com.example.demo.actors.ActiveActorDestructible;
 import javafx.geometry.Point2D;
-import javafx.scene.image.ImageView;
 
 /**
  * Base class for all projectiles.

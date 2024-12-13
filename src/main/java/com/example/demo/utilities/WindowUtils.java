@@ -1,9 +1,7 @@
 package com.example.demo.utilities;
 
-import com.example.demo.controller.Main;
 import javafx.animation.PauseTransition;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Scene;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;

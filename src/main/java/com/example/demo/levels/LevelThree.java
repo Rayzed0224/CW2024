@@ -1,11 +1,11 @@
 package com.example.demo.levels;
 
-import com.example.demo.ui.WinImage;
 import com.example.demo.actors.Boss;
 import com.example.demo.actors.UserPlane;
 import com.example.demo.ui.GameOverUI;
 import com.example.demo.ui.HeartDisplay;
 import com.example.demo.ui.ShieldImage;
+import com.example.demo.ui.WinImage;
 import javafx.scene.Scene;
 
 import java.util.ArrayList;
